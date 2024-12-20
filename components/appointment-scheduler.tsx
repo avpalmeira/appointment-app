@@ -16,6 +16,13 @@ export function AppointmentScheduler() {
   const [selectedDate, setSelectedDate] = useState<Date>();
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<TimeSlot>();
 
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const thirtyDaysFromNow = new Date();
+  thirtyDaysFromNow.setDate(today.getDate() + 30);
+  thirtyDaysFromNow.setHours(23, 59, 59, 999);
+
   return (
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader className="text-center">
@@ -28,6 +35,9 @@ export function AppointmentScheduler() {
             selected={selectedDate}
             onSelect={setSelectedDate}
             className="rounded-md border"
+            disabled={(date) => date < today || date > thirtyDaysFromNow}
+            fromDate={today}
+            toDate={thirtyDaysFromNow}
           />
         </div>
         <div className="flex-1 w-full max-w-sm">
