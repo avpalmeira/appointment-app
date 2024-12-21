@@ -1,35 +1,54 @@
-import { Header } from "@/components/header";
-import { AppointmentWidget } from "@/components/appointment-widget";
-
-// This would normally come from your authentication system
-const MOCK_USER = {
-  id: "1",
-  name: "Joseph",
-  role: "patient" as const,
-};
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import Link from "next/link";
 
 export default function Home() {
   return (
-    <div>
-      <Header user={MOCK_USER} />
-      <main className="container mx-auto p-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-          {/* Left column with text */}
-          <div className="space-y-4 flex flex-col justify-between h-full">
-            <h2 className="text-4xl text-gray-700 py-16">
-              You can schedule new appointments
-              <br />
-              or manage existing ones
-              <br />
-              using the widget
-            </h2>
-            <p className="text-gray-600">Assigned provider: Doc. Stephen Z.</p>
-          </div>
+    <div className="min-h-screen flex flex-col items-center justify-center p-4">
+      <div className="text-center mb-8">
+        <h1 className="text-4xl font-normal text-gray-800 mb-2">
+          Appointment App
+        </h1>
+        <p className="text-xl text-gray-600">
+          The app for medical appointments
+        </p>
+      </div>
 
-          {/* Right column with scheduler */}
-          <AppointmentWidget />
-        </div>
-      </main>
+      <Card className="w-full max-w-3xl">
+        <CardContent className="p-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+            <div className="text-center">
+              <h2 className="text-xl font-semibold mb-6">
+                Access the system as a<br />
+                PATIENT clicking the
+                <br />
+                button below
+              </h2>
+              <Button
+                asChild
+                className="bg-sky-100 hover:bg-sky-200 text-gray-800 text-lg px-8 py-6 h-auto"
+              >
+                <Link href="/patient">Access as patient</Link>
+              </Button>
+            </div>
+
+            <div className="text-center pt-8 border-t md:border-t-0 md:border-l md:border-gray-200 md:pl-8 md:pt-0">
+              <h2 className="text-xl font-semibold mb-6">
+                Access the system as a<br />
+                PROVIDER clicking the
+                <br />
+                button below
+              </h2>
+              <Button
+                asChild
+                className="bg-purple-100 hover:bg-purple-200 text-gray-800 text-lg px-8 py-6 h-auto"
+              >
+                <Link href="/provider">Access as provider</Link>
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
