@@ -11,7 +11,7 @@ const MOCK_USER = {
 export default function Home() {
   return (
     <div>
-      <Header user={MOCK_USER} />
+      <Header user={MOCK_USER} className="bg-sky-100" />
       <main className="container mx-auto p-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
           {/* Left column with text */}

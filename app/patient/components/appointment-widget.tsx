@@ -14,15 +14,11 @@ export function AppointmentWidget() {
         <Button
           onClick={() => setSelectedTab("new")}
           variant="secondary"
-          className="w-full"
+          className="bg-sky-100 hover:bg-sky-200"
         >
           Create Appointment
         </Button>
-        <Button
-          onClick={() => setSelectedTab("manage")}
-          variant="outline"
-          className="w-full"
-        >
+        <Button onClick={() => setSelectedTab("manage")} variant="outline">
           Manage Appointments
         </Button>
       </div>

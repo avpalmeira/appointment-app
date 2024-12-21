@@ -1,17 +1,18 @@
-import { User } from '@/types'
+import { User } from "@/types";
+import { cn } from "@/lib/utils";
 
 interface HeaderProps {
-  user: User
+  user: User;
+  className?: string;
 }
 
-export function Header({ user }: HeaderProps) {
+export function Header({ user, className }: HeaderProps) {
   return (
-    <header className="bg-sky-100 p-4">
+    <header className={cn("p-4", className)}>
       <div className="container mx-auto flex justify-between items-center">
         <h1 className="text-2xl text-gray-700">Appointment App</h1>
         <div className="text-gray-700">Welcome, {user.name}</div>
       </div>
     </header>
-  )
+  );
 }
-
