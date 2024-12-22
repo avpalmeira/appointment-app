@@ -27,7 +27,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               using the widget
             </h2>
             <p className="text-gray-600">
-              Assigned provider: {MOCK_PROVIDER.name}.
+              Assigned provider: {MOCK_PROVIDER.name}
             </p>
           </div>
 

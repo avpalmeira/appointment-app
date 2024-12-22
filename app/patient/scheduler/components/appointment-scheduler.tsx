@@ -4,14 +4,21 @@ import { useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { TimeSlot } from "@/types";
+import { User, TimeSlot } from "@/types";
 import { NewAppointmentModal } from "./new-appointment-modal";
+import { createAppointment } from "@/lib/actions";
 
 interface AppointmentSchedulerProps {
   timeSlots: Record<string, TimeSlot[]>;
+  user: User;
+  provider: User;
 }
 
-export function AppointmentScheduler({ timeSlots }: AppointmentSchedulerProps) {
+export function AppointmentScheduler({
+  timeSlots,
+  user,
+  provider,
+}: AppointmentSchedulerProps) {
   const [selectedDate, setSelectedDate] = useState<Date>();
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<TimeSlot>();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -26,14 +33,14 @@ export function AppointmentScheduler({ timeSlots }: AppointmentSchedulerProps) {
 
   const handleConfirm = (reason: string) => {
     if (selectedDate && selectedTimeSlot) {
-      console.log("Appointment confirmed:", {
-        date: selectedDate,
-        timeSlot: selectedTimeSlot,
-        reason,
+      createAppointment({
+        description: reason,
+        time_slot: selectedTimeSlot.id,
+        patient: user.id,
+        provider: provider.id,
+        fromView: "patient",
       });
-      // onSchedule(selectedDate, selectedTimeSlot)
       setIsModalOpen(false);
-      // Reset selections after scheduling
       setSelectedDate(undefined);
       setSelectedTimeSlot(undefined);
     }
@@ -108,7 +115,7 @@ export function AppointmentScheduler({ timeSlots }: AppointmentSchedulerProps) {
           onConfirm={handleConfirm}
           date={selectedDate}
           timeSlot={selectedTimeSlot}
-          providerName="Doc. Stephen Z."
+          provider={provider}
         />
       )}
     </>

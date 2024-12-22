@@ -8,7 +8,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { TimeSlot } from "@/types";
+import { User, TimeSlot } from "@/types";
 import { useState } from "react";
 
 interface AppointmentModalProps {
@@ -17,7 +17,7 @@ interface AppointmentModalProps {
   onConfirm: (reason: string) => void;
   date: Date;
   timeSlot: TimeSlot;
-  providerName: string;
+  provider: User;
 }
 
 export function NewAppointmentModal({
@@ -26,7 +26,7 @@ export function NewAppointmentModal({
   onConfirm,
   date,
   timeSlot,
-  providerName,
+  provider,
 }: AppointmentModalProps) {
   const [formData, setFormData] = useState<FormData | null>(null);
 
@@ -51,7 +51,7 @@ export function NewAppointmentModal({
         </DialogHeader>
         <form onSubmit={handleSubmit} onChange={handleChange}>
           <div className="flex justify-between text-xl text-gray-700 mb-6">
-            <div>{providerName}</div>
+            <div>{provider.name}</div>
             <div>
               {date.toLocaleDateString("en-US", {
                 month: "short",

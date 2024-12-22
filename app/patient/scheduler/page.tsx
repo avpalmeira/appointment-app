@@ -2,12 +2,25 @@ import { TimeSlot } from "@/types";
 import { AppointmentScheduler } from "./components/appointment-scheduler";
 import db from "@/lib/db";
 
+// This should come from the database: table assigned_providers
 const MOCK_PROVIDER = {
   id: "1",
   name: "Doctor Stephen Z.",
 };
 
-async function getTimeSlotsByProvider(providerName: string) {
+const MOCK_USER = {
+  id: "1",
+  name: "Joseph M.",
+};
+
+async function getUserByName(userName: string) {
+  const { rows } = await db.query(`SELECT * FROM users WHERE name = $1`, [
+    userName,
+  ]);
+  return rows[0];
+}
+
+async function getTimeSlotsByProvider(providerId: string) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -19,19 +32,18 @@ async function getTimeSlotsByProvider(providerName: string) {
     const { rows } = await db.query(
       `
       SELECT 
-        time_slots.id,
+        id,
         date,
         start_time,
         end_time,
         status
       FROM time_slots
-      JOIN users ON time_slots.provider = users.id
-      WHERE users.name = $1
+      WHERE provider = $1
       AND date >= $2
       AND date <= $3
-      ORDER BY time_slots.date, time_slots.start_time
+      ORDER BY date, start_time
       `,
-      [providerName, today.toISOString(), thirtyDaysFromNow.toISOString()]
+      [providerId, today.toISOString(), thirtyDaysFromNow.toISOString()]
     );
 
     // Transform into object grouped by date
@@ -45,7 +57,7 @@ async function getTimeSlotsByProvider(providerName: string) {
       }
 
       acc[dateStr].push({
-        id: row.time_slots_id,
+        id: row.id,
         date: row.date,
         startTime: startTime,
         endTime: endTime,
@@ -61,7 +73,15 @@ async function getTimeSlotsByProvider(providerName: string) {
 }
 
 export default async function AppointmentSchedulerPage() {
-  const timeSlots = await getTimeSlotsByProvider(MOCK_PROVIDER.name);
+  const user = await getUserByName(MOCK_USER.name);
+  const provider = await getUserByName(MOCK_PROVIDER.name);
+  const timeSlots = await getTimeSlotsByProvider(provider.id);
 
-  return <AppointmentScheduler timeSlots={timeSlots} />;
+  return (
+    <AppointmentScheduler
+      timeSlots={timeSlots}
+      user={user}
+      provider={provider}
+    />
+  );
 }
