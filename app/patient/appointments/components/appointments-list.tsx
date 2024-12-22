@@ -7,7 +7,11 @@ import { Appointment } from "@/types";
 import { useState } from "react";
 import { DeleteAppointmentModal } from "@/components/delete-appointment-modal";
 
-export function AppointmentsList() {
+interface AppointmentsListProps {
+  appointments: Appointment[];
+}
+
+export function AppointmentsList({ appointments }: AppointmentsListProps) {
   const [selectedAppointment, setSelectedAppointment] =
     useState<Appointment | null>(null);
 
@@ -17,33 +21,6 @@ export function AppointmentsList() {
       // Here you would typically call an API to delete the appointment
     }
   };
-
-  const appointments: Appointment[] = [
-    {
-      id: "1",
-      date: new Date("2024-12-20"),
-      timeSlot: {
-        startTime: "10:30",
-        endTime: "11:00",
-        isAvailable: false,
-      },
-      patientId: "1",
-      providerId: "doc-1",
-      status: "scheduled" as const,
-    },
-    {
-      id: "2",
-      date: new Date("2024-12-26"),
-      timeSlot: {
-        startTime: "11:30",
-        endTime: "12:00",
-        isAvailable: false,
-      },
-      patientId: "1",
-      providerId: "doc-1",
-      status: "scheduled" as const,
-    },
-  ];
 
   return (
     <>
