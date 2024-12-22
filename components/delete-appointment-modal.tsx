@@ -35,7 +35,7 @@ export function DeleteAppointmentModal({
         <div className="flex justify-between text-xl text-gray-700 my-12">
           <div>{patientName}</div>
           <div>
-            {appointment.date.toLocaleDateString("en-US", {
+            {new Date(appointment.timeSlot.date).toLocaleDateString("en-US", {
               month: "short",
               day: "numeric",
               year: "numeric",

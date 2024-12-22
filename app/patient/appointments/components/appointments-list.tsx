@@ -6,6 +6,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Appointment } from "@/types";
 import { useState } from "react";
 import { DeleteAppointmentModal } from "@/components/delete-appointment-modal";
+import { deleteAppointment } from "@/lib/actions";
+
+const MOCK_PROVIDER = {
+  id: "1",
+  name: "Doctor Stephen Z.",
+};
 
 interface AppointmentsListProps {
   appointments: Appointment[];
@@ -14,13 +20,6 @@ interface AppointmentsListProps {
 export function AppointmentsList({ appointments }: AppointmentsListProps) {
   const [selectedAppointment, setSelectedAppointment] =
     useState<Appointment | null>(null);
-
-  const handleDelete = () => {
-    if (selectedAppointment) {
-      console.log("Deleting appointment:", selectedAppointment.id);
-      // Here you would typically call an API to delete the appointment
-    }
-  };
 
   return (
     <>
@@ -43,7 +42,7 @@ export function AppointmentsList({ appointments }: AppointmentsListProps) {
               <div key={appointment.id}>
                 <div className="text-lg font-medium border-b pb-2">{date}</div>
                 <div className="flex items-center justify-between py-4">
-                  <div className="text-gray-700">Doc. Stephen Z.</div>
+                  <div className="text-gray-700">{MOCK_PROVIDER.name}</div>
                   <div className="text-gray-600">
                     {appointment.timeSlot.startTime} -{" "}
                     {appointment.timeSlot.endTime}
@@ -53,7 +52,7 @@ export function AppointmentsList({ appointments }: AppointmentsListProps) {
                     size="icon"
                     className="text-gray-500 hover:text-gray-700"
                     onClick={() => {
-                      console.log("Cancel appointment:", appointment.id);
+                      setSelectedAppointment(appointment);
                     }}
                   >
                     <X className="h-4 w-4" />
@@ -69,7 +68,10 @@ export function AppointmentsList({ appointments }: AppointmentsListProps) {
         <DeleteAppointmentModal
           isOpen={!!selectedAppointment}
           onClose={() => setSelectedAppointment(null)}
-          onConfirm={handleDelete}
+          onConfirm={() => {
+            deleteAppointment(selectedAppointment.id, "patient");
+            setSelectedAppointment(null);
+          }}
           appointment={selectedAppointment}
           patientName="Joseph M."
         />

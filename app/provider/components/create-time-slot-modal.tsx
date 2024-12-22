@@ -27,7 +27,7 @@ interface CreateTimeSlotModalProps {
 export function CreateTimeSlotModal({
   isOpen,
   onClose,
-  onSave,
+  // onSave,
   existingSlots,
   selectedDate,
 }: CreateTimeSlotModalProps) {
@@ -44,8 +44,8 @@ export function CreateTimeSlotModal({
 
   const handleSave = () => {
     if (selectedTimeRange) {
-      const [startTime, endTime] = selectedTimeRange.split(" - ");
-      onSave({ startTime, endTime, isAvailable: true });
+      // const [startTime, endTime] = selectedTimeRange.split(" - ");
+      // onSave({ startTime, endTime, isAvailable: true });
       onClose();
     }
   };

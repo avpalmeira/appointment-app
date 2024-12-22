@@ -29,6 +29,8 @@ export function generateTimeSlots(): TimeSlot[] {
     ).padStart(2, "0")}`;
 
     slots.push({
+      id: `slot-${minutes}`, // not used
+      date: new Date(), // not used
       startTime,
       endTime,
       isAvailable: true,

@@ -37,8 +37,8 @@ async function getAppointments(patientName: string) {
       timeSlot: {
         id: row.time_slot_id,
         date: new Date(row.date),
-        startTime: row.start_time,
-        endTime: row.end_time,
+        startTime: row.start_time.substring(0, 5),
+        endTime: row.end_time.substring(0, 5),
         isAvailable: row.status === "available",
       },
       patient: row.patient,

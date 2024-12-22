@@ -7,6 +7,10 @@ const MOCK_USER = {
   name: "Joseph",
   role: "patient" as const,
 };
+const MOCK_PROVIDER = {
+  id: "1",
+  name: "Doctor Stephen Z.",
+};
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -22,7 +26,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <br />
               using the widget
             </h2>
-            <p className="text-gray-600">Assigned provider: Doc. Stephen Z.</p>
+            <p className="text-gray-600">
+              Assigned provider: {MOCK_PROVIDER.name}.
+            </p>
           </div>
 
           <div className="space-y-6">
