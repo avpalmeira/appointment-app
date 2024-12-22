@@ -30,11 +30,14 @@ export function AppointmentsList({ appointments }: AppointmentsListProps) {
         </CardHeader>
         <CardContent className="space-y-6">
           {appointments.map((appointment) => {
-            const date = appointment.date.toLocaleDateString("en-US", {
-              month: "short",
-              day: "numeric",
-              year: "numeric",
-            });
+            const date = new Date(appointment.timeSlot.date).toLocaleDateString(
+              "en-US",
+              {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+              }
+            );
 
             return (
               <div key={appointment.id}>

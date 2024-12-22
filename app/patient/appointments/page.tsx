@@ -11,11 +11,22 @@ async function getAppointments(patientName: string) {
   try {
     const { rows } = await db.query(
       `
-    SELECT * FROM appointments 
+    SELECT
+      appointments.id,
+      appointments.description,
+      appointments.is_new,
+      appointments.patient,
+      appointments.provider,
+      time_slots.id as time_slot_id,
+      time_slots.date,
+      time_slots.start_time,
+      time_slots.end_time,
+      time_slots.status
+    FROM appointments 
     JOIN users ON appointments.patient = users.id
     JOIN time_slots ON appointments.time_slot = time_slots.id
     WHERE users.name = $1
-    ORDER BY date, start_time
+    ORDER BY time_slots.date, time_slots.start_time
     `,
       [patientName]
     );
@@ -23,14 +34,17 @@ async function getAppointments(patientName: string) {
     // Transform database rows to match your Appointment type
     return rows.map((row) => ({
       id: row.id,
-      date: new Date(row.date),
       timeSlot: {
+        id: row.time_slot_id,
+        date: new Date(row.date),
         startTime: row.start_time,
         endTime: row.end_time,
         isAvailable: row.status === "available",
       },
-      patientId: row.patient,
-      providerId: row.provider,
+      patient: row.patient,
+      provider: row.provider,
+      description: row.description,
+      isNew: row.is_new,
     }));
   } catch (error) {
     console.error("Error fetching appointments:", error);

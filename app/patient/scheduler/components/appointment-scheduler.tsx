@@ -7,16 +7,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TimeSlot } from "@/types";
 import { NewAppointmentModal } from "./new-appointment-modal";
 
-const TIME_SLOTS: TimeSlot[] = [
-  { startTime: "10:00", endTime: "10:30", isAvailable: true },
-  { startTime: "11:00", endTime: "11:30", isAvailable: true },
-  { startTime: "14:00", endTime: "14:30", isAvailable: true },
-];
+interface AppointmentSchedulerProps {
+  timeSlots: Record<string, TimeSlot[]>;
+}
 
-export function AppointmentScheduler() {
+export function AppointmentScheduler({ timeSlots }: AppointmentSchedulerProps) {
   const [selectedDate, setSelectedDate] = useState<Date>();
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<TimeSlot>();
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const selectedDateString = selectedDate?.toISOString().split("T")[0] ?? "";
 
   const handleScheduleClick = () => {
     if (selectedDate && selectedTimeSlot) {
@@ -77,13 +77,14 @@ export function AppointmentScheduler() {
                   })}
                 </h3>
                 <div className="space-y-2">
-                  {TIME_SLOTS.map((slot) => (
+                  {timeSlots[selectedDateString]?.map((slot) => (
                     <Button
                       key={slot.startTime}
                       variant={
                         selectedTimeSlot === slot ? "default" : "outline"
                       }
                       className="w-full text-center"
+                      disabled={!slot.isAvailable}
                       onClick={() => setSelectedTimeSlot(slot)}
                     >
                       {slot.startTime} - {slot.endTime}

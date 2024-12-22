@@ -7,6 +7,8 @@ export interface User {
 }
 
 export interface TimeSlot {
+  id: string;
+  date: Date;
   startTime: string;
   endTime: string;
   isAvailable: boolean;
@@ -14,8 +16,9 @@ export interface TimeSlot {
 
 export interface Appointment {
   id: string;
-  date: Date;
+  description: string;
+  isNew: boolean;
   timeSlot: TimeSlot;
-  patientId: string;
-  providerId: string;
+  patient: string;
+  provider: string;
 }
