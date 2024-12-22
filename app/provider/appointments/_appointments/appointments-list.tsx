@@ -13,52 +13,27 @@ import {
 import { DeleteAppointmentModal } from "@/components/delete-appointment-modal";
 import { Appointment, TimeSlot } from "@/types";
 import { RescheduleAppointmentModal } from "./reschedule-appointment-modal";
+import { deleteAppointment } from "@/lib/actions";
 
 interface ExtendedAppointment extends Appointment {
   patientName: string;
   description: string;
 }
 
-export function AppointmentsList() {
-  const [selectedAppointment, setSelectedAppointment] =
+interface AppointmentsListProps {
+  appointments: ExtendedAppointment[];
+}
+
+export function AppointmentsList({ appointments }: AppointmentsListProps) {
+  const [appointmentToDelete, setAppointmentToDelete] =
     useState<ExtendedAppointment | null>(null);
   const [appointmentToReschedule, setAppointmentToReschedule] =
     useState<ExtendedAppointment | null>(null);
 
-  // This would normally come from your API
-  const appointments: ExtendedAppointment[] = [
-    {
-      id: "1",
-      date: new Date("2024-12-20"),
-      timeSlot: {
-        startTime: "10:30",
-        endTime: "11:00",
-        isAvailable: false,
-      },
-      patientId: "patient-1",
-      providerId: "doc-1",
-      patientName: "Joseph M.",
-      description: "Regular check-up and consultation",
-    },
-    {
-      id: "2",
-      date: new Date("2024-12-26"),
-      timeSlot: {
-        startTime: "10:30",
-        endTime: "11:00",
-        isAvailable: false,
-      },
-      patientId: "patient-1",
-      providerId: "doc-1",
-      patientName: "Joseph M.",
-      description: "Follow-up consultation",
-    },
-  ];
-
   const handleDelete = () => {
-    if (selectedAppointment) {
-      console.log("Deleting appointment:", selectedAppointment.id);
-      // Here you would typically call an API to delete the appointment
+    if (appointmentToDelete) {
+      deleteAppointment(appointmentToDelete.id, "provider");
+      setAppointmentToDelete(null);
     }
   };
 
@@ -81,7 +56,7 @@ export function AppointmentsList() {
         </CardHeader>
         <CardContent className="space-y-6">
           {appointments.map((appointment) => {
-            const date = appointment.date.toLocaleDateString("en-US", {
+            const date = appointment.timeSlot.date.toLocaleDateString("en-US", {
               month: "short",
               day: "numeric",
               year: "numeric",
@@ -129,7 +104,7 @@ export function AppointmentsList() {
                       variant="ghost"
                       size="icon"
                       className="text-gray-500 hover:text-gray-700"
-                      onClick={() => setSelectedAppointment(appointment)}
+                      onClick={() => setAppointmentToDelete(appointment)}
                     >
                       <X className="h-4 w-4" />
                       <span className="sr-only">Delete appointment</span>
@@ -142,13 +117,13 @@ export function AppointmentsList() {
         </CardContent>
       </Card>
 
-      {selectedAppointment && (
+      {appointmentToDelete && (
         <DeleteAppointmentModal
-          isOpen={!!selectedAppointment}
-          onClose={() => setSelectedAppointment(null)}
+          isOpen={!!appointmentToDelete}
+          onClose={() => setAppointmentToDelete(null)}
           onConfirm={handleDelete}
-          appointment={selectedAppointment}
-          patientName={selectedAppointment.patientName}
+          appointment={appointmentToDelete}
+          patientName={appointmentToDelete.patientName}
         />
       )}
 
@@ -158,7 +133,7 @@ export function AppointmentsList() {
           onClose={() => setAppointmentToReschedule(null)}
           onConfirm={handleReschedule}
           patientName={appointmentToReschedule.patientName}
-          currentDate={appointmentToReschedule.date}
+          currentDate={appointmentToReschedule.timeSlot.date}
           currentTime={appointmentToReschedule.timeSlot.startTime}
         />
       )}

@@ -6,8 +6,8 @@ import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TimeSlot } from "@/types";
-import { EditTimeSlotModal } from "./edit-time-slot-modal";
-import { CreateTimeSlotModal } from "./create-time-slot-modal";
+import { EditTimeSlotModal } from "./_time-slots/edit-time-slot-modal";
+import { CreateTimeSlotModal } from "./_time-slots/create-time-slot-modal";
 
 const today = new Date();
 const maxDate = new Date();
@@ -37,7 +37,7 @@ const TIME_SLOTS: TimeSlot[] = [
   },
 ];
 
-export function TimeSlotManager() {
+export default function TimeSlotManager() {
   const [selectedDate, setSelectedDate] = useState<Date>();
   const [selectedSlot, setSelectedSlot] = useState<TimeSlot | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);

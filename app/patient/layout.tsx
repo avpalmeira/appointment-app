@@ -1,5 +1,5 @@
 import { Header } from "@/components/header";
-import NavLinks from "./components/nav-links";
+import NavLinks from "./_patient/nav-links";
 
 // This would normally come from your authentication system
 const MOCK_USER = {

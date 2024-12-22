@@ -43,7 +43,7 @@ export default function Home() {
                 asChild
                 className="bg-purple-100 hover:bg-purple-200 text-gray-800 text-lg px-8 py-6 h-auto"
               >
-                <Link href="/provider">Access as provider</Link>
+                <Link href="/provider/appointments">Access as provider</Link>
               </Button>
             </div>
           </div>

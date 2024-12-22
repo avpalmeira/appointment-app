@@ -48,7 +48,13 @@ export function EditTimeSlotModal({
 
   const handleSave = (newTimeRange: string) => {
     const [startTime, endTime] = newTimeRange.split(" - ");
-    onSave({ startTime, endTime, isAvailable: currentSlot.isAvailable });
+    onSave({
+      id: currentSlot.id,
+      date: selectedDate,
+      startTime,
+      endTime,
+      isAvailable: currentSlot.isAvailable,
+    });
   };
 
   return (

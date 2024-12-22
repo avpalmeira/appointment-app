@@ -8,7 +8,6 @@ interface CreateAppointmentProps {
   time_slot: string;
   patient: string;
   provider: string;
-  fromView: "patient" | "provider";
 }
 
 export async function createAppointment({
@@ -16,7 +15,6 @@ export async function createAppointment({
   time_slot,
   patient,
   provider,
-  fromView,
 }: CreateAppointmentProps) {
   let client;
   try {
@@ -41,7 +39,8 @@ export async function createAppointment({
       client.release();
     }
   }
-  revalidatePath(`/${fromView}/scheduler`);
+  // TODO: this is linked to a single page, change it to make it reusable
+  revalidatePath(`/patient/scheduler`);
 }
 
 export async function deleteAppointment(

@@ -1,5 +1,5 @@
 import { Header } from "@/components/header";
-import { ProviderWidget } from "./components/provider-widget";
+import NavLinks from "./_provider/nav-links";
 
 // This would normally come from your authentication system
 const MOCK_USER = {
@@ -8,7 +8,11 @@ const MOCK_USER = {
   role: "provider" as const,
 };
 
-export default function ProviderPage() {
+export default function ProviderLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <div>
       <Header user={MOCK_USER} className="bg-purple-100" />
@@ -26,7 +30,11 @@ export default function ProviderPage() {
             </h2>
           </div>
 
-          <ProviderWidget />
+          <div className="space-y-6">
+            <NavLinks />
+
+            {children}
+          </div>
         </div>
       </main>
     </div>

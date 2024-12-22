@@ -21,9 +21,27 @@ interface RescheduleAppointmentModalProps {
 }
 
 const TIME_SLOTS: TimeSlot[] = [
-  { startTime: "10:00", endTime: "10:30", isAvailable: true },
-  { startTime: "11:00", endTime: "11:30", isAvailable: true },
-  { startTime: "14:00", endTime: "14:30", isAvailable: true },
+  {
+    id: "1",
+    date: new Date(),
+    startTime: "10:00",
+    endTime: "10:30",
+    isAvailable: true,
+  },
+  {
+    id: "2",
+    date: new Date(),
+    startTime: "11:00",
+    endTime: "11:30",
+    isAvailable: true,
+  },
+  {
+    id: "3",
+    date: new Date(),
+    startTime: "14:00",
+    endTime: "14:30",
+    isAvailable: true,
+  },
 ];
 
 export function RescheduleAppointmentModal({
