@@ -1,4 +1,4 @@
-This is a Appointments App bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+This is an Appointment App bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Prerequisites
 
@@ -7,12 +7,20 @@ This is a Appointments App bootstrapped with [`create-next-app`](https://nextjs.
 
 ## Running the app
 
-First, run the development server:
+First, rename the `.env.example` file to `.env`.
+
+Then, run the following command to start the app and the database:
 
 ```bash
 docker compose up
 ```
 
-It will start the app and the database.
-
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## Stopping the app
+
+To stop the app and destroy its containers, run the following command:
+
+```bash
+docker compose down
+```
