@@ -129,3 +129,32 @@ export async function deleteAppointment(
   }
   revalidatePath(`/${fromView}/appointments`);
 }
+
+export async function deleteTimeSlot(id: string) {
+  let client;
+  try {
+    client = await db.connect();
+    await client.query("BEGIN");
+
+    // Check if the time slot is associated with any appointments
+    const { rows } = await client.query(
+      `SELECT COUNT(*) FROM appointments WHERE time_slot = $1`,
+      [id]
+    );
+    if (rows[0].count > 0) {
+      throw new Error("Time slot is associated with an appointment");
+    }
+
+    await client.query("DELETE FROM time_slots WHERE id = $1", [id]);
+    await client.query("COMMIT");
+  } catch (error) {
+    console.error("Error deleting time slot:", error);
+    throw error;
+  } finally {
+    if (client) {
+      client.release();
+    }
+  }
+  // TODO: this is linked to a single page, change it to make it reusable
+  revalidatePath(`/provider/time-slots`);
+}
