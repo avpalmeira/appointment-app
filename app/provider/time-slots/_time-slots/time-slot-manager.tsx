@@ -8,7 +8,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TimeSlot } from "@/types";
 import { EditTimeSlotModal } from "./edit-time-slot-modal";
 import { CreateTimeSlotModal } from "./create-time-slot-modal";
-import { deleteTimeSlot } from "@/lib/actions";
+import {
+  createTimeSlot,
+  CreateTimeSlotProps,
+  deleteTimeSlot,
+} from "@/lib/actions";
 
 const today = new Date();
 const maxDate = new Date();
@@ -16,18 +20,22 @@ maxDate.setDate(today.getDate() + 30);
 
 interface TimeSlotManagerProps {
   timeSlots: Record<string, TimeSlot[]>;
+  provider: string;
 }
 
-export default function TimeSlotManager({ timeSlots }: TimeSlotManagerProps) {
+export default function TimeSlotManager({
+  timeSlots,
+  provider,
+}: TimeSlotManagerProps) {
   const [selectedDate, setSelectedDate] = useState<Date>();
   const [selectedSlot, setSelectedSlot] = useState<TimeSlot | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const selectedDateString = selectedDate?.toISOString().split("T")[0] ?? "";
 
-  const handleAddTimeSlot = () => {
-    // This will be implemented later with a modal to add new time slots
-    console.log("Add new time slot");
+  const handleAddTimeSlot = (newSlot: CreateTimeSlotProps) => {
+    createTimeSlot(newSlot);
+    setIsCreateModalOpen(false);
   };
 
   const handleEditSlot = (newSlot: TimeSlot) => {
@@ -119,6 +127,7 @@ export default function TimeSlotManager({ timeSlots }: TimeSlotManagerProps) {
           onSave={handleAddTimeSlot}
           existingSlots={timeSlots[selectedDateString] ?? []}
           selectedDate={selectedDate}
+          provider={provider}
         />
       )}
     </>

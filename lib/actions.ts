@@ -43,6 +43,52 @@ export async function createAppointment({
   revalidatePath(`/patient/scheduler`);
 }
 
+export interface CreateTimeSlotProps {
+  provider: string;
+  date: Date;
+  startTime: string;
+  endTime: string;
+  status: "available" | "not_available";
+}
+
+export async function createTimeSlot({
+  provider,
+  date,
+  startTime,
+  endTime,
+  status,
+}: CreateTimeSlotProps) {
+  let client;
+  try {
+    client = await db.connect();
+    await client.query("BEGIN");
+
+    // Check if the time slot is already in the database
+    const { rows } = await client.query(
+      `SELECT COUNT(*) FROM time_slots WHERE date = $1 AND start_time = $2 AND end_time = $3 AND provider = $4`,
+      [date, startTime, endTime, provider]
+    );
+    if (rows[0].count > 0) {
+      throw new Error("Time slot already exists");
+    }
+
+    await client.query(
+      `INSERT INTO time_slots (date, start_time, end_time, status, provider) VALUES ($1, $2, $3, $4, $5)`,
+      [date, startTime, endTime, status, provider]
+    );
+    await client.query("COMMIT");
+  } catch (error) {
+    console.error("Error creating time slot:", error);
+    throw error;
+  } finally {
+    if (client) {
+      client.release();
+    }
+  }
+  // TODO: this is linked to a single page, change it to make it reusable
+  revalidatePath(`/provider/time-slots`);
+}
+
 interface RescheduleAppointmentProps {
   appointment: string;
   new_time_slot: string;

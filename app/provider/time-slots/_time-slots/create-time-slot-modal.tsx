@@ -15,21 +15,24 @@ import {
 } from "@/components/ui/select";
 import { TimeSlot } from "@/types";
 import { generateTimeSlots } from "@/lib/utils";
+import { CreateTimeSlotProps } from "@/lib/actions";
 
 interface CreateTimeSlotModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (newSlot: TimeSlot) => void;
+  onSave: (newSlot: CreateTimeSlotProps) => void;
   existingSlots: TimeSlot[];
   selectedDate: Date;
+  provider: string;
 }
 
 export function CreateTimeSlotModal({
   isOpen,
   onClose,
-  // onSave,
+  onSave,
   existingSlots,
   selectedDate,
+  provider,
 }: CreateTimeSlotModalProps) {
   const [selectedTimeRange, setSelectedTimeRange] = useState<string>();
   const allPossibleSlots = generateTimeSlots();
@@ -44,8 +47,14 @@ export function CreateTimeSlotModal({
 
   const handleSave = () => {
     if (selectedTimeRange) {
-      // const [startTime, endTime] = selectedTimeRange.split(" - ");
-      // onSave({ startTime, endTime, isAvailable: true });
+      const [startTime, endTime] = selectedTimeRange.split(" - ");
+      onSave({
+        date: selectedDate,
+        startTime,
+        endTime,
+        status: "available",
+        provider,
+      });
       onClose();
     }
   };

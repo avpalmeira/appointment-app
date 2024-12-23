@@ -11,5 +11,5 @@ export default async function TimeSlotsPage() {
   const provider = await getUserByName(MOCK_USER.name);
   const timeSlots = await getTimeSlotsByProvider(provider.id);
 
-  return <TimeSlotManager timeSlots={timeSlots} />;
+  return <TimeSlotManager timeSlots={timeSlots} provider={provider.id} />;
 }
