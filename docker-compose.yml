@@ -12,6 +12,11 @@ services:
     container_name: appointments_app_db
     volumes:
       - appointments_pg_data:/bitnami/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${PGUSER} -d ${PGDATABASE}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
   app:
     build:
       context: .
@@ -25,7 +30,8 @@ services:
       - PGHOST=db
       - PGPORT=5432
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     container_name: appointments_app
 
 volumes:

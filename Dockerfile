@@ -16,5 +16,5 @@ COPY . .
 # Expose port 3000
 EXPOSE 3000
 
-# Start the application (modified)
-CMD ["sh", "-c", "npm run build && npm start"]
+# Seed the database and start the app
+CMD ["sh", "-c", "node scripts/seed.js && npm run build && npm start"]

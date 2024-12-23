@@ -9,10 +9,10 @@ This is an Appointment App bootstrapped with [`create-next-app`](https://nextjs.
 
 First, rename the `.env.example` file to `.env`.
 
-Then, run the following command to start the app and the database:
+Then, run the following command to start the database, seed it and start the app:
 
 ```bash
-docker compose up
+docker compose up -d
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
