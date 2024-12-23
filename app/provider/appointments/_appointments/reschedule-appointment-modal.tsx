@@ -9,59 +9,35 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { TimeSlot } from "@/types";
+import { TimeSlot, ExtendedAppointment } from "@/types";
 
 interface RescheduleAppointmentModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: (newDate: Date, newTimeSlot: TimeSlot) => void;
-  patientName: string;
-  currentDate: Date;
-  currentTime: string;
+  onConfirm: (appointment: ExtendedAppointment, newTimeSlot: TimeSlot) => void;
+  appointment: ExtendedAppointment;
+  timeSlots: Record<string, TimeSlot[]>;
 }
-
-const TIME_SLOTS: TimeSlot[] = [
-  {
-    id: "1",
-    date: new Date(),
-    startTime: "10:00",
-    endTime: "10:30",
-    isAvailable: true,
-  },
-  {
-    id: "2",
-    date: new Date(),
-    startTime: "11:00",
-    endTime: "11:30",
-    isAvailable: true,
-  },
-  {
-    id: "3",
-    date: new Date(),
-    startTime: "14:00",
-    endTime: "14:30",
-    isAvailable: true,
-  },
-];
 
 export function RescheduleAppointmentModal({
   isOpen,
   onClose,
   onConfirm,
-  patientName,
-  currentDate,
-  currentTime,
+  appointment,
+  timeSlots,
 }: RescheduleAppointmentModalProps) {
   const [selectedDate, setSelectedDate] = useState<Date>();
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<TimeSlot>();
+
+  const selectedDateString = selectedDate?.toISOString().split("T")[0] ?? "";
 
   const today = new Date();
   const maxDate = new Date();
   maxDate.setDate(today.getDate() + 30);
 
   const handleConfirm = () => {
-    if (selectedDate && selectedTimeSlot) {
-      onConfirm(selectedDate, selectedTimeSlot);
+    if (selectedTimeSlot) {
+      onConfirm(appointment, selectedTimeSlot);
       onClose();
     }
   };
@@ -71,12 +47,12 @@ export function RescheduleAppointmentModal({
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle className="text-2xl font-normal">
-            Reschedule for: {patientName} (
-            {currentDate.toLocaleDateString("en-US", {
+            Reschedule for: {appointment?.patientName} (
+            {appointment?.timeSlot?.date?.toLocaleDateString("en-US", {
               month: "short",
               day: "numeric",
             })}{" "}
-            - {currentTime})
+            - {appointment?.timeSlot?.startTime})
           </DialogTitle>
         </DialogHeader>
 
@@ -106,12 +82,13 @@ export function RescheduleAppointmentModal({
                   })}
                 </h3>
                 <div className="space-y-2">
-                  {TIME_SLOTS.map((slot) => (
+                  {timeSlots[selectedDateString]?.map((slot) => (
                     <Button
                       key={slot.startTime}
                       variant={
                         selectedTimeSlot === slot ? "default" : "outline"
                       }
+                      disabled={!slot.isAvailable}
                       className="w-full text-center"
                       onClick={() => setSelectedTimeSlot(slot)}
                     >
@@ -129,7 +106,11 @@ export function RescheduleAppointmentModal({
             Cancel
           </Button>
           <Button
-            className="bg-sky-100 hover:bg-sky-200"
+            className={`${
+              selectedDate && selectedTimeSlot
+                ? "bg-sky-500 hover:bg-sky-600"
+                : "bg-sky-100"
+            }`}
             onClick={handleConfirm}
             disabled={!selectedDate || !selectedTimeSlot}
           >

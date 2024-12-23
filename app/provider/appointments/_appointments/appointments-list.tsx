@@ -11,20 +11,19 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { DeleteAppointmentModal } from "@/components/delete-appointment-modal";
-import { Appointment, TimeSlot } from "@/types";
+import { ExtendedAppointment, TimeSlot } from "@/types";
 import { RescheduleAppointmentModal } from "./reschedule-appointment-modal";
-import { deleteAppointment } from "@/lib/actions";
-
-interface ExtendedAppointment extends Appointment {
-  patientName: string;
-  description: string;
-}
+import { deleteAppointment, rescheduleAppointment } from "@/lib/actions";
 
 interface AppointmentsListProps {
   appointments: ExtendedAppointment[];
+  timeSlots: Record<string, TimeSlot[]>;
 }
 
-export function AppointmentsList({ appointments }: AppointmentsListProps) {
+export function AppointmentsList({
+  appointments,
+  timeSlots,
+}: AppointmentsListProps) {
   const [appointmentToDelete, setAppointmentToDelete] =
     useState<ExtendedAppointment | null>(null);
   const [appointmentToReschedule, setAppointmentToReschedule] =
@@ -37,14 +36,16 @@ export function AppointmentsList({ appointments }: AppointmentsListProps) {
     }
   };
 
-  const handleReschedule = (newDate: Date, newTimeSlot: TimeSlot) => {
+  const handleReschedule = (
+    appointment: ExtendedAppointment,
+    newTimeSlot: TimeSlot
+  ) => {
     if (appointmentToReschedule) {
-      console.log("Rescheduling appointment:", {
-        appointmentId: appointmentToReschedule.id,
-        newDate,
-        newTimeSlot,
+      rescheduleAppointment({
+        appointment: appointment.id,
+        new_time_slot: newTimeSlot.id,
       });
-      // Here you would typically call an API to update the appointment
+      setAppointmentToReschedule(null);
     }
   };
 
@@ -132,9 +133,8 @@ export function AppointmentsList({ appointments }: AppointmentsListProps) {
           isOpen={!!appointmentToReschedule}
           onClose={() => setAppointmentToReschedule(null)}
           onConfirm={handleReschedule}
-          patientName={appointmentToReschedule.patientName}
-          currentDate={appointmentToReschedule.timeSlot.date}
-          currentTime={appointmentToReschedule.timeSlot.startTime}
+          appointment={appointmentToReschedule}
+          timeSlots={timeSlots}
         />
       )}
     </>

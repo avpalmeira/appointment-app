@@ -22,3 +22,8 @@ export interface Appointment {
   patient: string;
   provider: string;
 }
+
+export interface ExtendedAppointment extends Appointment {
+  patientName: string;
+  description: string;
+}

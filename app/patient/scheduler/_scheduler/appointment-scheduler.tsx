@@ -38,7 +38,6 @@ export function AppointmentScheduler({
         time_slot: selectedTimeSlot.id,
         patient: user.id,
         provider: provider.id,
-        fromView: "patient",
       });
       setIsModalOpen(false);
       setSelectedDate(undefined);
