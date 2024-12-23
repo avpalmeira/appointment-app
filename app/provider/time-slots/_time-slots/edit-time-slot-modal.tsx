@@ -14,15 +14,18 @@ import {
 } from "@/components/ui/select";
 import { TimeSlot } from "@/types";
 import { generateTimeSlots } from "@/lib/utils";
+import { CreateTimeSlotProps } from "@/lib/actions";
+import { useState } from "react";
 
 interface EditTimeSlotModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (newSlot: TimeSlot) => void;
+  onSave: (currentSlotId: string, newSlot: CreateTimeSlotProps) => void;
   onDelete: () => void;
   currentSlot: TimeSlot;
   existingSlots: TimeSlot[];
   selectedDate: Date;
+  provider: string;
 }
 
 export function EditTimeSlotModal({
@@ -33,7 +36,11 @@ export function EditTimeSlotModal({
   currentSlot,
   existingSlots,
   selectedDate,
+  provider,
 }: EditTimeSlotModalProps) {
+  const [selectedTimeRange, setSelectedTimeRange] = useState(
+    `${currentSlot.startTime} - ${currentSlot.endTime}`
+  );
   const allPossibleSlots = generateTimeSlots();
   const availableSlots = allPossibleSlots.filter(
     (slot) =>
@@ -46,14 +53,18 @@ export function EditTimeSlotModal({
         currentSlot.endTime === slot.endTime)
   );
 
-  const handleSave = (newTimeRange: string) => {
-    const [startTime, endTime] = newTimeRange.split(" - ");
-    onSave({
-      id: currentSlot.id,
+  const handleTimeRangeChange = (newTimeRange: string) => {
+    setSelectedTimeRange(newTimeRange);
+  };
+
+  const handleSave = () => {
+    const [startTime, endTime] = selectedTimeRange.split(" - ");
+    onSave(currentSlot.id, {
       date: selectedDate,
       startTime,
       endTime,
-      isAvailable: currentSlot.isAvailable,
+      status: "available",
+      provider,
     });
   };
 
@@ -78,7 +89,7 @@ export function EditTimeSlotModal({
 
           <Select
             defaultValue={`${currentSlot.startTime} - ${currentSlot.endTime}`}
-            onValueChange={handleSave}
+            onValueChange={handleTimeRangeChange}
           >
             <SelectTrigger className="w-full">
               <SelectValue />
@@ -102,7 +113,7 @@ export function EditTimeSlotModal({
           </Button>
           <Button
             className="bg-sky-100 hover:bg-sky-200 text-gray-800"
-            onClick={onClose}
+            onClick={handleSave}
           >
             Save
           </Button>

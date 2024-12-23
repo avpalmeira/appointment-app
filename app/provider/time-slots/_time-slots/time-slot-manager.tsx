@@ -12,6 +12,7 @@ import {
   createTimeSlot,
   CreateTimeSlotProps,
   deleteTimeSlot,
+  editTimeSlot,
 } from "@/lib/actions";
 
 const today = new Date();
@@ -38,8 +39,14 @@ export default function TimeSlotManager({
     setIsCreateModalOpen(false);
   };
 
-  const handleEditSlot = (newSlot: TimeSlot) => {
-    setSelectedSlot(null);
+  const handleEditSlot = (
+    currentSlotId: string,
+    updatedSlot: CreateTimeSlotProps
+  ) => {
+    if (selectedSlot) {
+      editTimeSlot(currentSlotId, updatedSlot);
+      setSelectedSlot(null);
+    }
   };
 
   const handleDeleteSlot = () => {
@@ -117,6 +124,7 @@ export default function TimeSlotManager({
           currentSlot={selectedSlot}
           existingSlots={timeSlots[selectedDateString] ?? []}
           selectedDate={selectedDate}
+          provider={provider}
         />
       )}
 

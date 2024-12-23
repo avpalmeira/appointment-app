@@ -148,6 +148,48 @@ export async function rescheduleAppointment({
   revalidatePath(`/provider/appointments`);
 }
 
+export async function editTimeSlot(
+  id: string,
+  { date, startTime, endTime, status, provider }: CreateTimeSlotProps
+) {
+  let client;
+  try {
+    client = await db.connect();
+    await client.query("BEGIN");
+    // Check if the new time slot is already in the database
+    const { rows: timeSlotRows } = await client.query(
+      `SELECT COUNT(*) FROM time_slots WHERE date = $1 AND start_time = $2 AND end_time = $3 AND provider = $4`,
+      [date, startTime, endTime, provider]
+    );
+    if (timeSlotRows[0].count > 0) {
+      throw new Error("New time slot already exists");
+    }
+
+    // Check if the time slot is associated with any appointments
+    const { rows: appointmentRows } = await client.query(
+      `SELECT COUNT(*) FROM appointments WHERE time_slot = $1`,
+      [id]
+    );
+    if (appointmentRows[0].count > 0) {
+      throw new Error("Time slot is associated with an appointment");
+    }
+
+    await client.query(
+      `UPDATE time_slots SET date = $1, start_time = $2, end_time = $3, status = $4, provider = $5 WHERE id = $6`,
+      [date, startTime, endTime, status, provider, id]
+    );
+    await client.query("COMMIT");
+  } catch (error) {
+    console.error("Error editing time slot:", error);
+    throw error;
+  } finally {
+    if (client) {
+      client.release();
+    }
+  }
+  revalidatePath(`/provider/time-slots`);
+}
+
 export async function deleteAppointment(
   id: string,
   fromView: "patient" | "provider"
