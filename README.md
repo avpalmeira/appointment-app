@@ -1,5 +1,8 @@
 This is an Appointment App bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+<img width="512" height="931" alt="image" src="https://github.com/user-attachments/assets/29c90f45-0648-4705-b2c2-106a85a2eaf8" />
+
+
 ## Prerequisites
 
 - Docker
